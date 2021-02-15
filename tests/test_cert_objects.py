@@ -1,6 +1,6 @@
 from unittest import TestCase
 from pyftd import FTDClient
-from os import environ
+from os import environ, getcwd
 
 
 class TestURLObjects(TestCase):
@@ -16,3 +16,57 @@ class TestURLObjects(TestCase):
         self.ftd_client = FTDClient(environ.get("FTDIP"), environ.get("FTDUSER"), environ.get("FTDPASS"), verify=verify)
         self.ftd_client.get_access_token()
         self.ftd_client.get_swagger_client()
+
+        # Load test external CA certificates
+        with open("./tests/test_data/external_ca_1.pem", "r") as file_object:
+            self.ca_1_pem = file_object.read()
+        with open("./tests/test_data/external_ca_2.pem", "r") as file_object:
+            self.ca_2_pem = file_object.read()
+
+        # Load test internal CA key and certs
+        with open("./tests/test_data/internal_ca.key", "r") as file_object:
+            self.int_ca_key = file_object.read()
+        with open("./tests/test_data/internal_ca_1.pem", "r") as file_object:
+            self.int_ca_1_pem = file_object.read()
+        with open("./tests/test_data/internal_ca_2.pem", "r") as file_object:
+            self.int_ca_2_pem = file_object.read()
+
+    def test_crud_operations_external_ca_certificates(self):
+
+        # Create
+        ext_ca_cert_obj = self.ftd_client.create_external_ca_certificate(
+            {
+                "name": "untitest-ca",
+                "type": "externalcacertificate",
+                "cert": self.ca_1_pem,
+            }
+        )
+        self.assertEqual(ext_ca_cert_obj.name, "untitest-ca")
+        # Read
+        self.assertTrue(self.ftd_client.get_external_ca_certificate_list())
+        self.assertEqual(self.ftd_client.get_external_ca_certificate(ext_ca_cert_obj.id), ext_ca_cert_obj)
+
+        # update
+        ext_ca_cert_obj.cert = self.ca_2_pem
+        updated_ext_ca_cert = self.ftd_client.edit_external_ca_certificate((ext_ca_cert_obj))
+        test = self.ftd_client.get_external_ca_certificate(updated_ext_ca_cert.id)
+
+        # TODO: get reutned the cert as *** instead of PEM
+        # self.assertEqual(updated_ext_ca_cert.cert, ext_ca_2_pem)
+
+        # delete
+        self.ftd_client.delete_external_ca_certificate(updated_ext_ca_cert.id)
+        self.assertFalse(self.ftd_client.get_external_ca_certificate_list(filter="name:untitest-ca"))
+
+    def test_crud_operations_external_ca_certificates(self):
+        # Create
+        int_ca_cert_1 = self.ftd_client.create_internal_ca_certificate(
+            {
+                "name": "unittest-internal-ca",
+                "certType": "UPLOAD",
+                "type": "internalcacertificate",
+                "cert": self.int_ca_1_pem,
+                "privateKey": self.int_ca_key,
+            }
+        )
+        self.assertEqual(int_ca_cert_1.name, "unittest-internal-ca")
