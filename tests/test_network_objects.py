@@ -1,6 +1,5 @@
 from unittest import TestCase
 from pyftd import FTDClient
-from random import randint
 from os import environ
 
 
@@ -105,87 +104,6 @@ class TestFTDNetworkObjects(TestCase):
         self.ftd_client.delete_network_object(net_obj_1.id)
 
 
-#    def test_edit_url_object_group(self):
-#        url_objects = self.generate_random_url_objects()
-#        url_group = self.create_url_object_group_data("test-url-group", url_objects)
-#        self.assertIsNotNone(url_group)
-#        url_group_count = len(url_group.objects)
-#        url_objects.append(self.ftd_client.add_url_object(f"new-{str(randint(0,1000))}", f"{str(randint(0,1000))}.com"))
-#        url_group.objects = url_objects
-#        url_group = self.ftd_client.edit_url_object_group(url_group)
-#        self.assertEquals(url_group_count + 1, len(url_group.objects))
-#        self.ftd_client.delete_url_object_group(url_group.id)
-#        self.delete_url_objects(url_objects)
-#
-#    def test_get_url_object_group_list(self):
-#        url_objects = self.generate_random_url_objects()
-#        url_object_group = self.create_url_object_group_data("test-url-group", url_objects)
-#        self.assertTrue(self.ftd_client.get_url_object_group_list())
-#        self.ftd_client.delete_url_object_group(url_object_group.id)
-#        self.delete_url_objects(url_objects)
-#
-#    def test_search_url_object_group_list(self):
-#        url_objects = self.generate_random_url_objects()
-#        url_object_group = self.create_url_object_group_data("test-url-group", url_objects)
-#        self.assertTrue(self.ftd_client.get_url_object_group_list(search="name:test-url-group"))
-#        self.ftd_client.delete_url_object_group(url_object_group.id)
-#        self.delete_url_objects(url_objects)
-#
-#    def create_url_object_group_data(self, group_name, url_objects):
-#        self.remove_existing_group(group_name)
-#        return self.ftd_client.add_url_object_group(group_name, url_objects)
-#
-#    def remove_existing_group(self, group_name):
-#        existing_group = self.ftd_client.get_url_object_group_list(search=f"name:{group_name}")
-#        if existing_group:
-#            self.ftd_client.delete_url_object_group(existing_group[0].id)
-#
-#    def generate_random_url_objects(self, num_objs=3):
-#        url_objects = []
-#        for x in range(0, num_objs):
-#            url_objects.append(
-#                self.ftd_client.add_url_object(f"test-{str(randint(0,1000))}", f"{str(randint(0,1000))}.com")
-#            )
-#        return url_objects
-#
-#    def delete_url_objects(self, url_object_list):
-#        for url_object in url_object_list:
-#            self.ftd_client.delete_url_object(url_object.id)
-#
-#    def test_add_fqdn_network_object(self):
-#        test_url = f"{str(randint(0,1000))}.com"
-#        fqdn_net_obj = self.ftd_client.add_network_object(test_url, "FQDN", test_url, dns_resolution="IPV4_AND_IPV6")
-#        self.assertIsNotNone(fqdn_net_obj)
-#        self.ftd_client.delete_network_object(fqdn_net_obj.id)
-#
-#    def test_delete_fqdn_network_object(self):
-#        test_url = f"{str(randint(0,1000))}.com"
-#        fqdn_net_obj = self.ftd_client.add_network_object(test_url, "FQDN", test_url, dns_resolution="IPV4_AND_IPV6")
-#        self.assertTrue(self.ftd_client.get_network_object_list(search=f"name:{test_url}"))
-#        self.ftd_client.delete_network_object(fqdn_net_obj.id)
-#        self.assertFalse(self.ftd_client.get_network_object_list(search=f"name:{test_url}"))
-#
-#    def test_edit_fqdn_network_object(self):
-#        test_url = f"{str(randint(0,1000))}.com"
-#        fqdn_net_obj = self.ftd_client.add_network_object(test_url, "FQDN", test_url, dns_resolution="IPV4_AND_IPV6")
-#        fqdn_net_obj.value = "hacksbrain.com"
-#        fqdn_net_obj = self.ftd_client.edit_network_object(fqdn_net_obj)
-#        self.assertEquals(fqdn_net_obj.value, "hacksbrain.com")
-#        self.ftd_client.delete_network_object(fqdn_net_obj.id)
-#
-
-#    def test_delete_tcp_object(self):
-#        my_tcp_port = self.ftd_client.add_tcp_port_object("unit-test-port-666", "666", description="unit test tcp port")
-#        self.assertIsNotNone(my_tcp_port)
-#        self.ftd_client.delete_tcp_port_object(my_tcp_port.id)
-#
-#    def test_delete_udp_object(self):
-#        my_udp_port = self.ftd_client.add_udp_port_object("unit-test-port-666", "666", description="unit test udp port")
-#        self.assertIsNotNone(my_udp_port)
-#        self.ftd_client.delete_udp_port_object(my_udp_port.id)
-#        search_result = self.ftd_client.get_udp_port_object_list(search=f"name:unit-test-port-666")
-#        self.assertFalse(search_result)
-#
 #    def test_delete_icmp_object(self):
 #        my_icmp_port = self.ftd_client.add_icmpv4_port_object("my_test_icmp_obj", icmpv4type="ECHO_REQUEST")
 #        self.assertIsNotNone(my_icmp_port)

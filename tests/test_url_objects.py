@@ -1,6 +1,5 @@
 from unittest import TestCase
 from pyftd import FTDClient
-from random import randint
 from os import environ
 
 
