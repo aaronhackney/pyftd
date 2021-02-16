@@ -74,14 +74,18 @@ class FTDCertificateObjects:
     ################################
     # Internal CA Certificates
     @FTDAPIWrapper()
-    def get_internal_ca_certificate_list(self, filter=""):
-        if ":" in filter and not filter.split(":")[1]:  # a search key was provided with no value to search on
-            return None
+    def get_internal_ca_certificate_list(
+        self, limit: int = 9999, offset: int = 0, filter: Optional[str] = None
+    ) -> list:
         """
         :param search: optional search. Exmaple: "filter=name~my-certificate"
         :return: list of InternalCACertificates
         """
-        return self.swagger_client.Certificate.getInternalCACertificateList(filter=filter, limit=9999).result().items
+        return (
+            self.swagger_client.Certificate.getInternalCACertificateList(limit=limit, offset=offset, filter=filter)
+            .result()
+            .items
+        )
 
     @FTDAPIWrapper()
     def get_internal_ca_certificate(self, obj_id: str) -> list:
@@ -92,37 +96,36 @@ class FTDCertificateObjects:
         return self.swagger_client.Certificate.getInternalCACertificate(objId=obj_id).result()
 
     @FTDAPIWrapper()
-    def create_internal_ca_certificate(self, certificate_obj):
+    def create_internal_ca_certificate(self, certificate_obj: dict) -> dict:
         """
         Upload/Add an internal CA certificate in the InternalCACertificate data format.
         Note that the privateKey must be unencrypted.
-        InternalCACertificate Format:
-        {
-            "name": "unittest-internal-ca",
-            "certType": "UPLOAD", ['UPLOAD', 'SELFSIGNED']
-            "type": "internalcacertificate",
-            "cert": xxxxxx,
-            "privateKey": xxxxxxxx
-        }
-        :param certificate_obj:
-        :return: InternalCACertificate
-        :rtype: InternalCACertificate
+        :param certificate_obj: dict {
+
+                                        "name": "unittest-internal-ca",
+                                        "certType": "UPLOAD", ['UPLOAD', 'SELFSIGNED']
+                                        "type": "internalcacertificate",
+                                        "cert": xxxxxx,
+                                        "privateKey": xxxxxxxx
+                                     }
+        :return: dict InternalCACertificate
+        :rtype: dict InternalCACertificate
         """
         return self.swagger_client.Certificate.addInternalCACertificate(body=certificate_obj).result()
 
     @FTDAPIWrapper()
-    def edit_internal_ca_certificate(self, certificate_obj):
+    def edit_internal_ca_certificate(self, certificate_obj: dict) -> dict:
         """
         :param certificate_obj: The certificate object we wish to update. See the API explorer for more fields
-        :return: InternalCACertificate
-        :rtype: InternalCACertificate
+        :return: dict InternalCACertificate
+        :rtype: dict InternalCACertificate
         """
         return self.swagger_client.Certificate.editInternalCACertificate(
             objId=certificate_obj.id, body=certificate_obj
         ).result()
 
     @FTDAPIWrapper()
-    def delete_internal_ca_certificate(self, obj_id):
+    def delete_internal_ca_certificate(self, obj_id: str) -> None:
         """
         :param obj_id: InternalCACertificate object id that we wish to delete
         :return: None
@@ -132,17 +135,21 @@ class FTDCertificateObjects:
     ################################
     # Internal Certificates
     @FTDAPIWrapper()
-    def get_internal_certificate_list(self, filter=""):
+    def get_internal_certificate_list(self, limit: int = 9999, offset: int = 0, filter: Optional[str] = None) -> list:
         if ":" in filter and not filter.split(":")[1]:  # a search key was provided with no value to search on
             return None
         """
         :param search: optional search. Exmaple: "filter=name~my-certificate"
         :return: list of InternalCertificate
         """
-        return self.swagger_client.Certificate.getInternalCertificateList(filter=filter, limit=9999).result().items
+        return (
+            self.swagger_client.Certificate.getInternalCertificateList(limit=limit, offset=offset, filter=filter)
+            .result()
+            .items
+        )
 
     @FTDAPIWrapper()
-    def get_internal_certificate(self, obj_id):
+    def get_internal_certificate(self, obj_id: str) -> dict:
         """
         :param obj_id: InternalCertificate object id we wish to retrieve
         :return: InternalCertificate
@@ -150,55 +157,58 @@ class FTDCertificateObjects:
         return self.swagger_client.Certificate.getInternalCertificate(objId=obj_id).result()
 
     @FTDAPIWrapper()
-    def create_internal_certificate(self, certificate_obj):
+    def create_internal_certificate(self, certificate_obj: dict) -> dict:
         """
         Upload/Add an internal CA certificate in the InternalCACertificate data format.
         Note that the privateKey must be unencrypted.
-        InternalCACertificate Format:
-        {
-            "name": "unittest-internal-certificate",
-            "certType": "UPLOAD",
-            "type": "internalcertificate",
-            "cert": xxxxxx,
-            "privateKey": xxxxxxxx
-        }
-        :param certificate_obj:
-        :return: InternalCertificate
-        :rtype: InternalCertificate
+        :param certificate_obj: dict
+                                    {
+                                        "name": "unittest-internal-certificate",
+                                        "certType": "UPLOAD",
+                                        "type": "internalcertificate",
+                                        "cert": xxxxxx,
+                                        "privateKey": xxxxxxxx
+                                    }
+        :return: dict InternalCertificate
+        :rtype: dict InternalCertificate
         """
         return self.swagger_client.Certificate.addInternalCertificate(body=certificate_obj).result()
 
     @FTDAPIWrapper()
-    def edit_internal_certificate(self, certificate_obj):
+    def edit_internal_certificate(self, certificate_obj: dict) -> dict:
         """
         :param certificate_obj: The certificate object we wish to update. See the API explorer for more fields
-        :return: InternalCertificate
-        :rtype: InternalCertificate
+        :return: dict InternalCertificate
+        :rtype: dict InternalCertificate
         """
         return self.swagger_client.Certificate.editInternalCertificate(
             objId=certificate_obj.id, body=certificate_obj
         ).result()
 
     @FTDAPIWrapper()
-    def delete_internal_certificate(self, obj_id):
+    def delete_internal_certificate(self, obj_id: str) -> None:
         """
         :param obj_id: InternalCACertificate object id that we wish to delete
         :return: None
         """
         return self.swagger_client.Certificate.deleteInternalCertificate(objId=obj_id).result()
 
+    ################################
+    # External CA Certificates
     @FTDAPIWrapper()
-    def get_external_certificate_list(self, filter=""):
-        if ":" in filter and not filter.split(":")[1]:  # a search key was provided with no value to search on
-            return None
+    def get_external_certificate_list(self, limit: int = 9999, offset: int = 0, filter: Optional[str] = None) -> list:
         """
-        :param search: optional search. Exmaple: "filter=name~my-certificate"
+        :param filter: optional search. Exmaple: "filter=name:my-certificate"
         :return: list of ExternalCertificate
         """
-        return self.swagger_client.Certificate.getExternalCertificateList(filter=filter, limit=9999).result().items
+        return (
+            self.swagger_client.Certificate.getExternalCertificateList(filter=filter, limit=limit, offset=offset)
+            .result()
+            .items
+        )
 
     @FTDAPIWrapper()
-    def get_external_certificate(self, obj_id):
+    def get_external_certificate(self, obj_id: str) -> dict:
         """
         :param obj_id: ExternalCertificate object id we wish to retrieve
         :return: ExternalCertificate
@@ -206,26 +216,25 @@ class FTDCertificateObjects:
         return self.swagger_client.Certificate.getExternalCertificate(objId=obj_id).result()
 
     @FTDAPIWrapper()
-    def create_external_certificate(self, certificate_obj):
+    def create_external_certificate(self, certificate_obj: dict) -> dict:
         """
         Upload/Add an external CA certificate in the ExternalCACertificate data format.
         Note that the privateKey must be unencrypted.
-        ExternalCACertificate Format:
-        {
-            "name": "unittest-external-certificate",
-            "certType": "UPLOAD",
-            "type": "externalcertificate",
-            "cert": xxxxxx,
-            "privateKey": xxxxxxxx
-        }
-        :param certificate_obj:
-        :return: ExternalCertificate
-        :rtype: ExternalCertificate
+        :param certificate_obj: dict
+                                {
+                                    "name": "unittest-external-certificate",
+                                    "certType": "UPLOAD",
+                                    "type": "externalcertificate",
+                                    "cert": xxxxxx,
+                                    "privateKey": xxxxxxxx
+                                }
+        :return: dict ExternalCertificate
+        :rtype: dict ExternalCertificate
         """
         return self.swagger_client.Certificate.addExternalCertificate(body=certificate_obj).result()
 
     @FTDAPIWrapper()
-    def edit_external_certificate(self, certificate_obj):
+    def edit_external_certificate(self, certificate_obj: dict) -> dict:
         """
         :param certificate_obj: The certificate object we wish to update. See the API explorer for more fields
         :return: ExternalCertificate
@@ -236,7 +245,7 @@ class FTDCertificateObjects:
         ).result()
 
     @FTDAPIWrapper()
-    def delete_external_certificate(self, obj_id):
+    def delete_external_certificate(self, obj_id: str) -> None:
         """
         :param obj_id: ExternalCACertificate object id that we wish to delete
         :return: None

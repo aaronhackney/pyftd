@@ -17,30 +17,35 @@ class TestURLObjects(TestCase):
         self.ftd_client.get_access_token()
         self.ftd_client.get_swagger_client()
 
-        # Load test external CA certificates
-        with open("./tests/test_data/external_ca_1.pem", "r") as file_object:
-            self.ca_1_pem = file_object.read()
-        with open("./tests/test_data/external_ca_2.pem", "r") as file_object:
-            self.ca_2_pem = file_object.read()
+        src_test_files = {
+            "ca_1_pem": "external_ca_1.pem",
+            "ca_2_pem": "external_ca_2.pem",
+            "int_ca_1_key": "internal_ca_1.key",
+            "int_ca_2_key": "internal_ca_2.key",
+            "int_ca_1_pem": "internal_ca_1.pem",
+            "int_ca_2_pem": "internal_ca_2.pem",
+            "server_key": "server.key",
+            "server_1_cert": "server_1.pem",
+            "server_2_cert": "server_2.pem",
+        }
 
-        # Load test internal CA key and certs
-        with open("./tests/test_data/internal_ca_1.key", "r") as file_object:
-            self.int_ca_1_key = file_object.read()
-        with open("./tests/test_data/internal_ca_1.pem", "r") as file_object:
-            self.int_ca_1_pem = file_object.read()
-        with open("./tests/test_data/internal_ca_2.key", "r") as file_object:
-            self.int_ca_2_key = file_object.read()
-        with open("./tests/test_data/internal_ca_2.pem", "r") as file_object:
-            self.int_ca_2_pem = file_object.read()
+        self.test_certs = dict()
+        for var_name, filename in src_test_files.items():
+            with open(f"./tests/test_data/{filename}", "r") as file_obj:
+                self.test_certs[var_name] = file_obj.read()
 
     def test_crud_operations_external_ca_certificates(self):
+        # TEMP
+        # cert = self.ftd_client.get_external_ca_certificate_list(filter="name:untitest-ca")
+        # if cert:
+        #     self.ftd_client.delete_external_ca_certificate(cert.id)
 
         # Create
         ext_ca_cert_obj = self.ftd_client.create_external_ca_certificate(
             {
                 "name": "untitest-ca",
                 "type": "externalcacertificate",
-                "cert": self.ca_1_pem,
+                "cert": self.test_certs["ca_1_pem"],
             }
         )
         self.assertEqual(ext_ca_cert_obj.name, "untitest-ca")
@@ -49,7 +54,7 @@ class TestURLObjects(TestCase):
         self.assertEqual(self.ftd_client.get_external_ca_certificate(ext_ca_cert_obj.id), ext_ca_cert_obj)
 
         # update
-        ext_ca_cert_obj.cert = self.ca_2_pem
+        ext_ca_cert_obj.cert = self.test_certs["ca_2_pem"]
         updated_ext_ca_cert = self.ftd_client.edit_external_ca_certificate((ext_ca_cert_obj))
 
         # delete
@@ -63,8 +68,8 @@ class TestURLObjects(TestCase):
                 "name": "unittest-internal-ca",
                 "certType": "UPLOAD",
                 "type": "internalcacertificate",
-                "cert": self.int_ca_1_pem,
-                "privateKey": self.int_ca_1_key,
+                "cert": self.test_certs["int_ca_1_pem"],
+                "privateKey": self.test_certs["int_ca_1_key"],
             }
         )
         self.assertEqual(int_ca_cert_1.name, "unittest-internal-ca")
@@ -73,10 +78,10 @@ class TestURLObjects(TestCase):
         self.assertEqual(self.ftd_client.get_internal_ca_certificate(int_ca_cert_1.id).id, int_ca_cert_1.id)
 
         # Update
-        int_ca_cert_1.cert = self.int_ca_2_pem
-        int_ca_cert_1.privateKey = self.int_ca_2_key
+        int_ca_cert_1.cert = self.test_certs["int_ca_2_pem"]
+        int_ca_cert_1.privateKey = self.test_certs["int_ca_2_key"]
         updated_int_ca_cert_1 = self.ftd_client.edit_internal_ca_certificate(int_ca_cert_1)
-        self.assertTrue(updated_int_ca_cert_1.cert, self.int_ca_2_pem)
+        self.assertTrue(updated_int_ca_cert_1.cert, self.test_certs["int_ca_2_pem"])
 
         # Delete
         self.ftd_client.delete_internal_ca_certificate(int_ca_cert_1.id)
@@ -84,4 +89,53 @@ class TestURLObjects(TestCase):
 
     def test_crud_operations_internal_certificates(self):
         # Create
-        int_cert = self.ftd_client.create_internal_certificate()
+        int_cert = self.ftd_client.create_internal_certificate(
+            {
+                "name": "unittest-internal-certificate",
+                "certType": "UPLOAD",
+                "type": "internalcertificate",
+                "cert": self.test_certs["server_1_cert"],
+                "privateKey": self.test_certs["server_key"],
+            }
+        )
+        self.assertEqual(int_cert.name, "unittest-internal-certificate")
+
+        # Read
+        self.assertEqual(self.ftd_client.get_internal_certificate(int_cert.id).id, int_cert.id)
+
+        # Update
+        int_cert.cert = self.test_certs["server_2_cert"]
+        int_cert.privateKey = self.test_certs["server_key"]
+        updated_int_cert = self.ftd_client.edit_internal_certificate(int_cert)
+        self.assertEqual(updated_int_cert.subjectCommonName, "hacksbrain2.com")
+
+        # Delete
+        self.ftd_client.delete_internal_certificate(updated_int_cert.id)
+        self.assertFalse(self.ftd_client.get_internal_certificate_list(filter="name:unittest-internal-certificate"))
+
+    def test_crud_operations_external_certificates(self):
+        # Create
+        ext_cert = self.ftd_client.create_external_certificate(
+            {
+                "name": "unittest-external-certificate",
+                "certType": "UPLOAD",
+                "type": "externalcertificate",
+                "cert": self.test_certs["server_1_cert"],
+                "privateKey": self.test_certs["server_key"],
+            }
+        )
+
+        self.assertEqual(ext_cert.name, "unittest-external-certificate")
+
+        # Read
+        self.assertEqual(self.ftd_client.get_external_certificate(ext_cert.id).id, ext_cert.id)
+
+        # Update
+        ext_cert.cert = self.test_certs["server_2_cert"]
+        ext_cert.privateKey = self.test_certs["server_key"]
+        updated_ext_cert = self.ftd_client.edit_external_certificate(ext_cert)
+        self.assertEqual(updated_ext_cert.name, "unittest-external-certificate")
+
+        # Delete
+        self.ftd_client.delete_external_certificate(updated_ext_cert.id)
+        self.assertFalse(self.ftd_client.get_external_certificate_list(filter="name:unittest-external-certificate"))
