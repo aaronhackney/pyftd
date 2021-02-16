@@ -73,7 +73,6 @@ class FTDCertificateObjects:
 
     ################################
     # Internal CA Certificates
-
     @FTDAPIWrapper()
     def get_internal_ca_certificate_list(self, filter=""):
         if ":" in filter and not filter.split(":")[1]:  # a search key was provided with no value to search on
@@ -85,7 +84,7 @@ class FTDCertificateObjects:
         return self.swagger_client.Certificate.getInternalCACertificateList(filter=filter, limit=9999).result().items
 
     @FTDAPIWrapper()
-    def get_internal_ca_certificate(self, obj_id):
+    def get_internal_ca_certificate(self, obj_id: str) -> list:
         """
         :param obj_id: InternalCACertificate object id we wish to retrieve
         :return: InternalCACertificate
@@ -130,6 +129,8 @@ class FTDCertificateObjects:
         """
         return self.swagger_client.Certificate.deleteInternalCACertificate(objId=obj_id).result()
 
+    ################################
+    # Internal Certificates
     @FTDAPIWrapper()
     def get_internal_certificate_list(self, filter=""):
         if ":" in filter and not filter.split(":")[1]:  # a search key was provided with no value to search on

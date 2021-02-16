@@ -24,10 +24,12 @@ class TestURLObjects(TestCase):
             self.ca_2_pem = file_object.read()
 
         # Load test internal CA key and certs
-        with open("./tests/test_data/internal_ca.key", "r") as file_object:
-            self.int_ca_key = file_object.read()
+        with open("./tests/test_data/internal_ca_1.key", "r") as file_object:
+            self.int_ca_1_key = file_object.read()
         with open("./tests/test_data/internal_ca_1.pem", "r") as file_object:
             self.int_ca_1_pem = file_object.read()
+        with open("./tests/test_data/internal_ca_2.key", "r") as file_object:
+            self.int_ca_2_key = file_object.read()
         with open("./tests/test_data/internal_ca_2.pem", "r") as file_object:
             self.int_ca_2_pem = file_object.read()
 
@@ -49,16 +51,12 @@ class TestURLObjects(TestCase):
         # update
         ext_ca_cert_obj.cert = self.ca_2_pem
         updated_ext_ca_cert = self.ftd_client.edit_external_ca_certificate((ext_ca_cert_obj))
-        test = self.ftd_client.get_external_ca_certificate(updated_ext_ca_cert.id)
-
-        # TODO: get reutned the cert as *** instead of PEM
-        # self.assertEqual(updated_ext_ca_cert.cert, ext_ca_2_pem)
 
         # delete
         self.ftd_client.delete_external_ca_certificate(updated_ext_ca_cert.id)
         self.assertFalse(self.ftd_client.get_external_ca_certificate_list(filter="name:untitest-ca"))
 
-    def test_crud_operations_external_ca_certificates(self):
+    def test_crud_operations_internal_ca_certificates(self):
         # Create
         int_ca_cert_1 = self.ftd_client.create_internal_ca_certificate(
             {
@@ -66,7 +64,24 @@ class TestURLObjects(TestCase):
                 "certType": "UPLOAD",
                 "type": "internalcacertificate",
                 "cert": self.int_ca_1_pem,
-                "privateKey": self.int_ca_key,
+                "privateKey": self.int_ca_1_key,
             }
         )
         self.assertEqual(int_ca_cert_1.name, "unittest-internal-ca")
+
+        # Read
+        self.assertEqual(self.ftd_client.get_internal_ca_certificate(int_ca_cert_1.id).id, int_ca_cert_1.id)
+
+        # Update
+        int_ca_cert_1.cert = self.int_ca_2_pem
+        int_ca_cert_1.privateKey = self.int_ca_2_key
+        updated_int_ca_cert_1 = self.ftd_client.edit_internal_ca_certificate(int_ca_cert_1)
+        self.assertTrue(updated_int_ca_cert_1.cert, self.int_ca_2_pem)
+
+        # Delete
+        self.ftd_client.delete_internal_ca_certificate(int_ca_cert_1.id)
+        self.assertFalse(self.ftd_client.get_internal_ca_certificate_list(filter="name:unittest-internal-ca"))
+
+    def test_crud_operations_internal_certificates(self):
+        # Create
+        int_cert = self.ftd_client.create_internal_certificate()
