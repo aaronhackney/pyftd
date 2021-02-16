@@ -26,10 +26,10 @@ setuptools.setup(
     description="pyftd",
     author="Aaron K. Hackney",
     author_email="aaron_309@yahoo.com",
-    url="https://github.com/aaronhackney/afitop100",
+    url="https://github.com/aaronhackney/pyftd",
     download_url="",
     # keywords=["afi", "top 100", "films", "movies", "all time", "american", "film", "institute"],
-    install_requires=[bravado >= 11.0.2, bravado_core >= 5.17.0, requests >= 2.25.1, setuptools >= 51.1.2],
+    install_requires=["bravado >= 11.0.2", "bravado_core >= 5.17.0", "requests >= 2.25.1", "setuptools >= 51.1.2"],
     # entry_points={"console_scripts": ["pyftd = pyftd.__main__:main"]},
     classifiers=[
         "Development Status :: 4 - Beta",
