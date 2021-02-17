@@ -131,47 +131,6 @@ class FTDNetworkObjects:
         return self.swagger_client.NetworkObject.editNetworkObjectGroup(body=obj_group, objId=obj_group.id).result()
 
     #########
-
-    @FTDAPIWrapper()
-    def get_secret_object_list(self, limit: int = 9999, offset: int = 0, filter: Optional[str] = None) -> list:
-        """
-        :param limit: limit the number of records returned
-        :param offset: starting index of records to return (for paging)
-        :param search: limit returned results based on filters like "name:foo" or "fts~bar"
-        :return: list of Secret objects
-        :rtype: list
-        """
-        if ":" in filter and not filter.split(":")[1]:  # a search key was provided with no value to search on
-            return None
-        return self.swagger_client.Secret.getSecretList(limit=limit, offset=offset, filter=filter).result().items
-
-    @FTDAPIWrapper()
-    def get_secret_object(self, secret_obj_id):
-        """
-        Get a specific secret object
-        :param secret_obj_id: uuid of secret object
-        :return: SecretWrapper
-        """
-        return self.swagger_client.Secret.getSecret(objId=secret_obj_id)
-
-    @FTDAPIWrapper()
-    def create_secret_object(self, secret_name, password, description=""):
-        """
-        Create a secret object
-        :param secret_name: str name of the secret
-        :param password: str the secrete password we wish to store
-        :param description: str description of the secret
-        :return: Secret object
-        :rtype: SecretWrapper
-        """
-        secret_obj = {
-            "name": secret_name,
-            "password": password,
-            "description": description,
-            "type": "secret",
-        }
-        return self.swagger_client.Secret.addSecret(body=secret_obj).result()
-
     @FTDAPIWrapper()
     def get_radius_identity_source_list(self, limit=9999, offset=0, filter=""):
         """
