@@ -63,7 +63,8 @@ class FTDClient(
 
     All of the client classes are instantiated by simply instantiating the FTDClient class
     Sample usage:
-    ftd_client = FTDClient('192.168.255.254', verify=False)
+
+    ftd_client = FTDClient(192.168.100.100, admin, "Admin123", verify=False)
     net_obj = ftd_client.create_network_object(
         {
             "name": "TEST-NET",
