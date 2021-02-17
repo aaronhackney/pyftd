@@ -47,21 +47,10 @@ class FTDClient(
     # FTDDUOConfig,
 ):
     """The FTDClient is the primary interface that includes all of the API client libraries for FTD API (FDM)
-    :param ftd_ip: the ip address of the FTD device to be managed
-    :type ftd_ip: str
-    :param verify: this determines if we should verify the validity the SSL certificate or not. (Hint, self-signed
-    certificates will require this to be FALSE.
-    :type verify: bool
-    :param fdm_port: (Optional) Used If there is a need to jump through a proxy listening on an alternate port, other
-    than the standard port 443
-    :type fdm_port: str
-    :param proxies: (Optional) a dictionary of proxy servers like: proxies={"https": "socks5://127.0.0.1:9999"}
-    :type proxies: dict
 
     Note that if an environment variable HTTP_PROXY=socks5://<proxyip>:<proxyport> exists, the client libraries will
     use this socks proxy by default and we do not have to expressly configure it in the constructor
 
-    All of the client classes are instantiated by simply instantiating the FTDClient class
     Sample usage:
 
     ftd_client = FTDClient(192.168.100.100, admin, "Admin123", verify=False)
@@ -85,4 +74,13 @@ class FTDClient(
         proxies: Optional[dict] = None,
         timeout: int = 30,
     ):
+        """
+        :param ftd_ip: str the ip address of the FTD device to be managed
+        :param username: str an admin user
+        :param password: str password for the admin-user (above)
+        :param verify: bool verify the validity the SSL certificate or not (Hint, self-signed certs = FALSE)
+        :param fdm_port: str (Optional) Used to connect to ftd on a port other than the standard port 443
+        :type fdm_port: str (Optional) Soecify only if FDM is not listening on port 443
+        :param proxies: dict (Optional) a dictionary of proxy servers like: proxies={"https": "socks5://127.0.0.1:9999"}
+        """
         FTDBaseClient.__init__(self, ftd_ip, username, password, verify, fdm_port, proxies, timeout)
