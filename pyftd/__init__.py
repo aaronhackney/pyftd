@@ -64,9 +64,14 @@ class FTDClient(
     All of the client classes are instantiated by simply instantiating the FTDClient class
     Sample usage:
     ftd_client = FTDClient('192.168.255.254', verify=False)
-    ftd_client.get_access_token('my_username', 'my_password')
-    ftd_client.swagger_client()
-    ftd_client.add_tcp_port_object('my-port', '8443', 'My Port Object in FTD')
+    net_obj = self.ftd_client.create_network_object(
+        {
+            "name": "TEST-NET",
+            "value": "10.1.1.0/24",
+            "subType": "NETWORK",
+            "type": "networkobject"
+        }
+    )
     """
 
     def __init__(
