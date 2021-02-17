@@ -14,8 +14,6 @@ class TestURLObjects(TestCase):
     def setUp(self):
         verify = True if environ.get("VERIFY") else False
         self.ftd_client = FTDClient(environ.get("FTDIP"), environ.get("FTDUSER"), environ.get("FTDPASS"), verify=verify)
-        self.ftd_client.get_access_token()
-        self.ftd_client.get_swagger_client()
 
         src_test_files = {
             "ca_1_pem": "external_ca_1.pem",
@@ -35,11 +33,6 @@ class TestURLObjects(TestCase):
                 self.test_certs[var_name] = file_obj.read()
 
     def test_crud_operations_external_ca_certificates(self):
-        # TEMP
-        # cert = self.ftd_client.get_external_ca_certificate_list(filter="name:untitest-ca")
-        # if cert:
-        #     self.ftd_client.delete_external_ca_certificate(cert.id)
-
         # Create
         ext_ca_cert_obj = self.ftd_client.create_external_ca_certificate(
             {

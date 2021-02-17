@@ -126,20 +126,23 @@ class FTDBaseClient(object):
         self.password = password
         self.token = None
         self.timeout = timeout
+        self.get_access_token()  # Get an auth token
+        self.get_swagger_client()  # download the swagger spec
 
-    def get_api_version(self) -> Union[dict, None]:
+    @staticmethod
+    def get_api_version(ftd_ip, fdm_port=None, verify=True, timeout=30) -> list:
         """
         This is callable without authentication and without instantiation the swagger client to get the API version.
         The API version is a hint at the major code version running on the box. Note that knowing the version is not
         mandatory, for example, we can always use '/api/fdm/latest' vs '/api/fdm/v4' when making API calls.
         :return: api version
         """
-        api_response = self.http_session.get(
-            url=self.base_url + "/api/versions", verify=self.verify, timeout=self.timeout
-        )
+        http_session = Session()
+        base_url = f"https://{ftd_ip}:{fdm_port}" if fdm_port else f"https://{ftd_ip}"
+        api_response = http_session.get(url=f"{base_url}/api/versions", verify=verify, timeout=timeout)
         data = api_response.json()
         if "supportedVersions" in data:
-            return data["supportedVersions"][0]
+            return data["supportedVersions"]
 
     def get_access_token(self) -> Union[dict, None]:
         """

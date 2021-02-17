@@ -14,8 +14,6 @@ class TestURLObjects(TestCase):
     def setUp(self):
         verify = True if environ.get("VERIFY") else False
         self.ftd_client = FTDClient(environ.get("FTDIP"), environ.get("FTDUSER"), environ.get("FTDPASS"), verify=verify)
-        self.ftd_client.get_access_token()
-        self.ftd_client.get_swagger_client()
 
     def test_crud_operations_url_object(self):
         # Create

@@ -14,8 +14,6 @@ class TestURLObjects(TestCase):
     def setUp(self):
         verify = True if environ.get("VERIFY") else False
         self.ftd_client = FTDClient(environ.get("FTDIP"), environ.get("FTDUSER"), environ.get("FTDPASS"), verify=verify)
-        self.ftd_client.get_access_token()
-        self.ftd_client.get_swagger_client()
 
     #############################
     # TCP Port Objects
@@ -116,3 +114,27 @@ class TestURLObjects(TestCase):
         self.assertFalse(self.ftd_client.get_port_object_group_list(filter="name:Updated-Test-Port-Grp"))
         self.ftd_client.delete_tcp_port_object(port_obj_1.id)
         self.ftd_client.delete_udp_port_object(port_obj_2.id)
+
+    def test_search_port_objects(self):
+        tcp_obj = self.ftd_client.create_tcp_port_object(
+            {"name": "TCP-Port-Test", "description": "test", "port": "25", "type": "tcpportobject"}
+        )
+        udp_obj = self.ftd_client.create_udp_port_object(
+            {"name": "UDP-Port-Test", "description": "test", "port": "25", "type": "udpportobject"}
+        )
+        icmp_obj = self.ftd_client.create_ipv4_icmp_port_object(
+            {
+                "name": "ICMP_TEST",
+                "icmpv4Type": "ECHO_REPLY",
+                "type": "icmpv4portobject",
+                "description": "Unittest ipv4 icmp",
+            }
+        )
+
+        self.assertTrue(self.ftd_client.search_port_objects("TCP-Port-Test"))
+        self.assertTrue(self.ftd_client.search_port_objects("UDP-Port-Test"))
+        self.assertTrue(self.ftd_client.search_port_objects("ICMP_TEST"))
+
+        self.ftd_client.delete_tcp_port_object(tcp_obj.id)
+        self.ftd_client.delete_udp_port_object(udp_obj.id)
+        self.ftd_client.delete_ipv4_icmp_port_object(icmp_obj.id)

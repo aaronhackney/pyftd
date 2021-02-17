@@ -1,4 +1,4 @@
-__version__ = "0.9.0"
+__version__ = "2.0.1"
 
 import logging
 from .base import FTDBaseClient

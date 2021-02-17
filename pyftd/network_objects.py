@@ -233,26 +233,6 @@ class FTDNetworkObjects:
             body=radius_group_obj
         ).result()
 
-    #    @FTDAPIWrapper()
-    #    def get_port_object_by_name(self, port_obj_name):
-    #        """
-    #        Search for a port object by name without specifying what kind of port (icmp, udp, tcp)
-    #        :param port_obj_name:
-    #        :return: TCPPortObject or UDPPortObject or ICMPv4Object or None
-    #        """
-    #        tcp_port_obj_list = self.get_tcp_port_object_list(filter=f"name:{port_obj_name}")
-    #        if tcp_port_obj_list:
-    #            return tcp_port_obj_list[0]
-    #        else:
-    #            udp_port_obj_list = self.get_udp_port_object_list(filter=f"name:{port_obj_name}")
-    #            if udp_port_obj_list:
-    #                return udp_port_obj_list[0]
-    #            else:
-    #                icmp_object_list = self.get_icmpv4_port_object_list(filter=f"name:{port_obj_name}")
-    #                if icmp_object_list:
-    #                    return icmp_object_list[0]
-    #        return
-
     @FTDAPIWrapper()
     def get_dnsgroup_objects_list(self, filter="", limit=9999, offset=0):
         """
