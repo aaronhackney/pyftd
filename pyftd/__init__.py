@@ -9,6 +9,7 @@ from .cert_objects import FTDCertificateObjects
 from .secret_objects import FTDSecretObjects
 from .identity_objects import FTDIdentityObjects
 from .syslog_dns_objects import FTDSyslogDNSObjects
+from .interfaces import FTDInterfaces
 from typing import Optional
 
 # from .ftd_backups import FTDBackups
@@ -37,6 +38,7 @@ class FTDClient(
     FTDSecretObjects,
     FTDIdentityObjects,
     FTDSyslogDNSObjects,
+    FTDInterfaces,
     # FTDBackups,
     # FTDFlexConfig,
     # FTDHighAvailability,
