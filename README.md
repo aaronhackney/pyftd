@@ -8,7 +8,7 @@ The library calls are all structured to use the same attribute names as the nati
 
 ## Requirements
 - Python 3.7+
-- FTD must be managed by FDM (Sorry, not FMC compatible)
+- FTD Version 6.6.0+ managed by FDM (Sorry, not FMC compatible)
 - Admin level credentials for the FTD
 
 ## Installation

@@ -53,3 +53,59 @@ class TestInterfafces(TestCase):
 
     #############################
     # SubInterfaces Interface Objects
+    def test_crud_operations_sub_interfaces(self):
+        phys_int_list = self.ftd_client.get_physical_interface_list()
+        # Create
+        sub_int = self.ftd_client.create_sub_interface(
+            phys_int_list[2].id,
+            {
+                "type": "subinterface",
+                "subIntfId": 109,
+                "vlanId": 109,
+                "mtu": 1500,
+                "mode": "ROUTED",
+                "present": True,
+                "security": 0,
+                "enabled": True,
+                "hardwareName": "GigabitEthernet0/0.101",
+                "description": "VLAN 101 Sub Interface",
+                "monitorInterface": True,
+                "ipv4": {
+                    "ipType": "STATIC",
+                    "dhcpRouteMetric": 1,
+                    "defaultRouteUsingDHCP": True,
+                    "type": "interfaceipv4",
+                    "ipAddress": {
+                        "standbyIpAddress": "",
+                        "type": "haipv4address",
+                        "netmask": "255.255.255.0",
+                        "ipAddress": "172.16.16.254",
+                    },
+                },
+                "name": "uat",
+            },
+        )
+        self.assertEqual(sub_int.vlanId, 109)
+
+        # Update
+        sub_int.vlanId = 901
+        updated_sub_int = self.ftd_client.update_sub_interface(phys_int_list[2].id, sub_int)
+        self.assertEqual(updated_sub_int.vlanId, 901)
+
+        # Read
+        self.assertEqual(self.ftd_client.get_sub_interface(phys_int_list[2].id, sub_int.id).id, sub_int.id)
+
+        # Delete
+        self.ftd_client.delete_sub_interface(phys_int_list[2].id, sub_int.id)
+
+    #############################
+    # Interfaces Operational Status and Info
+    def test_interface_operational_status(self):
+        int_status_list = self.ftd_client.get_interface_operational_status_list()
+        self.assertTrue(int_status_list)
+        int_status = self.ftd_client.get_interface_operational_status(int_status_list[2].id)
+        self.assertIn(int_status.linkState, ["UP", "DOWN"])
+
+    def test_get_interface_list(self):
+        int_info_list = self.ftd_client.get_interface_info_list()
+        self.assertTrue(int_info_list)

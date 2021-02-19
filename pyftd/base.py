@@ -122,6 +122,7 @@ class FTDBaseClient(object):
         self.verify = verify
         self.http_session = Session()
         self.http_session.proxies = proxies
+        self.api_version = FTDBaseClient.get_api_version(self.base_url, proxies, verify, timeout)
         self.username = username
         self.password = password
         self.token = None
@@ -130,19 +131,23 @@ class FTDBaseClient(object):
         self.get_swagger_client()  # download the swagger spec
 
     @staticmethod
-    def get_api_version(ftd_ip, fdm_port=None, verify=True, timeout=30) -> list:
+    def get_api_version(ftd_base_url, proxies, verify=True, timeout=30) -> int:
         """
-        This is callable without authentication and without instantiation the swagger client to get the API version.
+        This is callable without authentication and without instantiation the swagger client or this class to get the
+        API version.
+
         The API version is a hint at the major code version running on the box. Note that knowing the version is not
         mandatory, for example, we can always use '/api/fdm/latest' vs '/api/fdm/v4' when making API calls.
-        :return: api version
+
+        The method will return the highest API version supported by this appliance
+        e.g. if /api/versions returns [v1,v2,v3,v4,v5,latest] then this method will return 5
+        :return: int api version
         """
         http_session = Session()
-        base_url = f"https://{ftd_ip}:{fdm_port}" if fdm_port else f"https://{ftd_ip}"
-        api_response = http_session.get(url=f"{base_url}/api/versions", verify=verify, timeout=timeout)
+        http_session.proxies = proxies
+        api_response = http_session.get(url=f"{ftd_base_url}/api/versions", verify=verify, timeout=timeout)
         data = api_response.json()
-        if "supportedVersions" in data:
-            return data["supportedVersions"]
+        return int(data["supportedVersions"][len(data["supportedVersions"]) - 2][1:])
 
     def get_access_token(self) -> Union[dict, None]:
         """
