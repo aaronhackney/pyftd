@@ -106,6 +106,6 @@ class TestInterfafces(TestCase):
         int_status = self.ftd_client.get_interface_operational_status(int_status_list[2].id)
         self.assertIn(int_status.linkState, ["UP", "DOWN"])
 
-    def test_get_interface_list(self):
+    def test_get_interface_info_list(self):
         int_info_list = self.ftd_client.get_interface_info_list()
         self.assertTrue(int_info_list)

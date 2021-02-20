@@ -164,6 +164,7 @@ class FTDInterfaces:
     def get_interface_operational_status(self, interface_id: str) -> dict:
         """
         Get the operational status and information for a specific interface, given the interface id
+        ****** PRO TIP: IF an interface has a DHCP obtained IP address, you can see it here ******
         :param interface_id: str interface object id for which we wish to retrieve data
         """
         return self.swagger_client.Interface.getInterfaceData(objId=interface_id).result()
