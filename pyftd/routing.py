@@ -88,7 +88,7 @@ class FTDRouting:
         ).result()
 
     @FTDAPIWrapper()
-    def delete_static_route(self, route_obj_id: dict, parent_id: str = "default") -> dict:
+    def delete_static_route(self, route_obj_id: dict, parent_id: str = "default") -> None:
         """
         delete a static route from the given VRF
         :param route_obj_id: str the route object id
