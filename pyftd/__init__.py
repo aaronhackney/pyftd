@@ -5,10 +5,10 @@ from .base import FTDBaseClient
 from .network_objects import FTDNetworkObjects
 from .url_objects import FTDURLObjects
 from .port_objects import FTDPortObjects
-from .cert_objects import FTDCertificateObjects
-from .secret_objects import FTDSecretObjects
-from .identity_objects import FTDIdentityObjects
-from .syslog_dns_objects import FTDSyslogDNSObjects
+from .certificates import FTDCertificateObjects
+from .secrets import FTDSecretObjects
+from .identity import FTDIdentityObjects
+from .syslog_dns import FTDSyslogDNSObjects
 from .interfaces import FTDInterfaces
 from .routing import FTDRouting
 from typing import Optional

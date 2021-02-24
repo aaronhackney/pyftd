@@ -8,8 +8,7 @@ log = logging.getLogger(__name__)
 class FTDRouting:
     ################################
     # VRFs
-
-    # TODO: Add VFR Create, Update, Delete Operations
+    # TODO: Add VFR Create, Update, Delete Operations as of FTD 7.0 VRF is available with Snort 3.x
     @FTDAPIWrapper()
     def get_vrf_list(self, limit: int = 9999, offset: int = 0, filter: Optional[str] = None) -> list:
         """
@@ -97,3 +96,72 @@ class FTDRouting:
         :rtype: dict StaticRouteEntryWrapper
         """
         return self.swagger_client.Routing.deleteStaticRouteEntry(parentId=parent_id, objId=route_obj_id).result()
+
+    ################################
+    # SLA Monitors
+    @FTDAPIWrapper()
+    def get_sla_monitor_list(self) -> list:
+        """
+        Get list of sla monitor objects
+        """
+        self.swagger_client.SLAMonitor.getSLAMonitorList().result().items
+
+    @FTDAPIWrapper()
+    def get_sla_monitor(self, sla_monitor_id: str) -> dict:
+        """
+        Get sla monitor
+        :param sla_monitor_id: str id of the monitor object
+        """
+        self.swagger_client.SLAMonitor.getSLAMonitor(objId=sla_monitor_id).result()
+
+    @FTDAPIWrapper()
+    def get_sla_monitor_status_list(self) -> list:
+        """
+        Get the current status of SLA monitors
+        """
+        return self.swagger_client.SLAMonitor.getSLAMonitorList().result().items
+
+    @FTDAPIWrapper()
+    def get_sla_monitor_status(self, sla_obj_id: str) -> dict:
+        """
+        Get the current status of a specific SLA monitor
+        :param sla_monitor_id: str id of the monitor object
+        """
+        return self.ftd_client.swagger_client.SLAMonitor.getSLAMonitorStatus(objId=sla_obj_id).result().items
+
+    @FTDAPIWrapper()
+    def add_sla_monitor(self, sla_monitor: dict) -> dict:
+        """
+        :param sla_monitor: dict {
+                                  "description": "Test SLA Monitor",
+                                  "type": "slamonitor",
+                                  "slaOperation": {
+                                    "timeout": 5000,
+                                    "frequency": 60000,
+                                    "threshold": 5000,
+                                    "numOfPackets": 1,
+                                    "typeOfService": 0,
+                                    "dataSize": 28,
+                                    "type": "ipicmpecho"
+                                  },
+                                  "name": "TEST-SLA",
+                                  "monitoredAddress": <network host object>,
+                                  "targetInterface": <interface object>
+                                }
+        """
+        return self.swagger_client.SLAMonitor.addSLAMonitor(body=sla_monitor).result()
+
+    @FTDAPIWrapper()
+    def edit_sla_monitor(self, sla_monitor: dict) -> dict:
+        """
+        :param sla_monitor: dict
+        """
+        return self.swagger_client.SLAMonitor.editSLAMonitor(body=sla_monitor, objId=sla_monitor.id).result()
+
+    @FTDAPIWrapper()
+    def delete_sla_monitor(self, sla_monitor_id: str) -> None:
+        """
+        Delete SLA object given the object id
+        :param sla_monitor_id: str id of the monitor object
+        """
+        return self.swagger_client.SLAMonitor.deleteSLAMonitor(objId=sla_monitor_id).result()

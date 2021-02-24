@@ -75,3 +75,11 @@ class TestRouting(TestCase):
         # delete
         self.ftd_client.delete_static_route(updated_static_route.id)
         self.assertFalse(self.ftd_client.get_static_route_list(filter="name:unittest-route"))
+
+    #############################
+    # SLA Monitor
+    def test_crud_sla_monitor(self):
+        # Testing coming
+        # As of FTD 6.7 there is an error in the Swagger Spec for the create SLAMonitor call
+        # Rather than brute force this via a requests HTTP POST, we are going to wait for the swagger patch
+        pass
