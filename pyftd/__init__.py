@@ -11,6 +11,7 @@ from .identity import FTDIdentityObjects
 from .syslog_dns import FTDSyslogDNSObjects
 from .interfaces import FTDInterfaces
 from .routing import FTDRouting
+from .nat import FTDNatPolicy
 from typing import Optional
 
 # from .ftd_backups import FTDBackups
@@ -40,7 +41,8 @@ class FTDClient(
     FTDIdentityObjects,
     FTDSyslogDNSObjects,
     FTDInterfaces,
-    FTDRouting
+    FTDRouting,
+    FTDNatPolicy,
     # FTDBackups,
     # FTDFlexConfig,
     # FTDHighAvailability,

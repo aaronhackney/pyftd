@@ -29,7 +29,7 @@ class FTDNatPolicy:
         :return: dict ObjectNatRuleContainerWrapper object
         :rtype: dict ObjectNatRuleContainerWrapper
         """
-        return self.swagger_client.NAT.getObjectNatRuleContainerList(objId=autonat_container_id).result()
+        return self.swagger_client.NAT.getObjectNatRuleContainer(objId=autonat_container_id).result()
 
     @FTDAPIWrapper()
     def get_autonat_policy_list(
@@ -58,8 +58,23 @@ class FTDNatPolicy:
     def add_autonat_policy(self, autonat_parent_id: str, nat_policy: dict) -> dict:
         """
         Given a ManualNatRuleWrapper dict object- see create_manual_nat_object(), create the autonat rule as specified.
+        See the api broswer for full list of autonat attributes
         :param autonat_parent_id: the autonat container (parentId)
-        :param nat_policy: ObjectNatRuleWrapper (See model above)
+        :param nat_policy: dict {
+                                 "type": "objectnatrule",
+                                 "interfaceInTranslatedNetwork": False,
+                                 "enabled": True,
+                                 "description": "Test Auto Nat",
+                                 "natType": "STATIC",
+                                 "noProxyArp": True,
+                                 "dns": True,
+                                 "routeLookup": False,
+                                 "name": "TEST-AUTO-NAT",
+                                 "originalNetwork": <host or network object>,
+                                 "translatedNetwork": <host or network object>,
+                                 "sourceInterface": <interface object>,
+                                 "destinationInterface":  <interface object>
+                                }
         :return: dict ObjectNatRuleWrapper
         :rtype: dict ObjectNatRuleWrapper
         """
@@ -113,11 +128,7 @@ class FTDNatPolicy:
         :return dict ManualNatContainerWrapper:
         :rtype: dict
         """
-        return (
-            self.swagger_client.NAT.getManualNatRuleContainerList(limit=limit, offset=offset, filter=filter)
-            .result()
-            .items
-        )
+        return self.swagger_client.NAT.getManualNatRuleContainer(objId=manual_nat_container_id).result()
 
     @FTDAPIWrapper()
     def get_manual_nat_policy_list(
@@ -130,7 +141,7 @@ class FTDNatPolicy:
         """
         return (
             self.swagger_client.NAT.getManualNatRuleList(
-                parentId=manual_nat_parent_id, filter=search, offset=offset, limit=limit
+                parentId=manual_nat_parent_id, limit=limit, offset=offset, filter=filter
             )
             .result()
             .items
@@ -151,8 +162,25 @@ class FTDNatPolicy:
     def add_manual_nat_policy(self, manual_nat_parent_id: str, nat_policy_obj: dict) -> dict:
         """
         Create a manual nat, either before autonat or after autonat, depending on the manual_nat_parent_id
+        See the api broswer for full list of manualnat attributes
         :param manual_nat_parent_id: str the object id of the manaul nat container (beforenat or afternat container)
-        :param nat_policy_obj: dict the manual nat we wish to create
+        :param nat_policy_obj: dict {
+                                      "type": "manualnatrule",
+                                      "interfaceInOriginalDestination": False,
+                                      "interfaceInTranslatedSource": True,
+                                      "enabled": True,
+                                      "description": "Inbound Port forward outside_interface_ip:http to inside_host:443",
+                                      "natType": "STATIC",
+                                      "noProxyArp": True,
+                                      "dns": False,
+                                      "routeLookup": False,
+                                      "name": "TEST-MANUAL-NAT",
+                                      "originalSourcePort": <port object>,
+                                      "translatedSourcePort": <port object>,
+                                      "originalSource": <network or host object>,
+                                      "sourceInterface": <interface object>,
+                                      "destinationInterface": <interface object>
+                                    }
         :return: dict  ManualNatRuleWrapper
         :rtype: dict ManualNatRuleWrapper
         """
@@ -178,4 +206,4 @@ class FTDNatPolicy:
         :param nat_obj_id: str The ManualNatRuleWrapper object id that we wish to delete
         :return: None
         """
-        return self.swagger_client.NAT.getManualNatRule(parentId=manual_nat_parent_id, objId=nat_obj_id).result()
+        return self.swagger_client.NAT.deleteManualNatRule(parentId=manual_nat_parent_id, objId=nat_obj_id).result()
