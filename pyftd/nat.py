@@ -148,7 +148,7 @@ class FTDNatPolicy:
         )
 
     @FTDAPIWrapper()
-    def get_manual_nat_policy(self, manual_nat_parent_id: str, nat_obj_id):
+    def get_manual_nat_policy(self, manual_nat_parent_id: str, nat_obj_id) -> dict:
         """
         Get a specific Manual NAT object
         :param manual_nat_parent_id: str the object id of the manaul nat container (beforenat or afternat container)
@@ -187,7 +187,7 @@ class FTDNatPolicy:
         return self.swagger_client.NAT.addManualNatRule(parentId=manual_nat_parent_id, body=nat_policy_obj).result()
 
     @FTDAPIWrapper()
-    def edit_manual_nat_policy(self, manual_nat_parent_id, nat_policy_obj):
+    def edit_manual_nat_policy(self, manual_nat_parent_id: str, nat_policy_obj: dict) -> dict:
         """
         :param manual_nat_parent_id: str the object id of the manaul nat container (beforenat or afternat container)
         :param nat_policy_obj: dict the manual nat we wish to create
