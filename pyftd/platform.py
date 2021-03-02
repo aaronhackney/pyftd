@@ -41,7 +41,7 @@ class FTDPlatform:
         :return: dict object that contains the platform hostname
         :rtype: dict of DeviceHostnameWrapper
         """
-        return self.swagger_client.DeviceHostname.getDeviceHostnameList(objId=hostname_id).result()
+        return self.swagger_client.DeviceHostname.getDeviceHostname(objId=hostname_id).result()
 
     @FTDAPIWrapper()
     def edit_hostname(self, hostname_obj: dict) -> dict:
@@ -89,6 +89,10 @@ class FTDPlatform:
         return self.swagger_client.DNS.getDeviceDNSSettingsList().result().items
 
     @FTDAPIWrapper()
+    def get_mgmt_dns_settings(self, dns_settings_obj_id):
+        return self.swagger_client.DNS.getDeviceDNSSettings(objId=dns_settings_obj_id).result()
+
+    @FTDAPIWrapper()
     def edit_mgmt_dns_settings(self, dns_settings):
         return self.swagger_client.DNS.editDeviceDNSSettings(objId=dns_settings.id, body=dns_settings).result()
 
@@ -100,6 +104,10 @@ class FTDPlatform:
         return self.swagger_client.DNS.getDataDNSSettingsList().result().items
 
     @FTDAPIWrapper()
+    def get_data_dns_settings(self, dns_settings_obj_id):
+        return self.swagger_client.DNS.getDataDNSSettings(objId=dns_settings_obj_id).result()
+
+    @FTDAPIWrapper()
     def edit_data_dns_settings(self, dns_settings):
         return self.swagger_client.DNS.editDataDNSSettings(objId=dns_settings.id, body=dns_settings).result()
 
@@ -108,7 +116,7 @@ class FTDPlatform:
         aaa_server_list = self.get_aaa_setting_list()
         for aaa_server in aaa_server_list:
             if aaa_server.name.lower() == aaa_name.lower():
-                logger.debug(f"Found a matching aaa server by name {aaa_name}")
+                log.debug(f"Found a matching aaa server by name {aaa_name}")
                 return aaa_server
 
     ################################

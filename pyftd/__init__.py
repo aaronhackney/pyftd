@@ -12,6 +12,7 @@ from .syslog_dns import FTDSyslogDNSObjects
 from .interfaces import FTDInterfaces
 from .routing import FTDRouting
 from .nat import FTDNatPolicy
+from .platform import FTDPlatform
 from typing import Optional
 
 # from .ftd_backups import FTDBackups
@@ -43,6 +44,7 @@ class FTDClient(
     FTDInterfaces,
     FTDRouting,
     FTDNatPolicy,
+    FTDPlatform,
     # FTDBackups,
     # FTDFlexConfig,
     # FTDHighAvailability,
