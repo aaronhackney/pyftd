@@ -13,6 +13,7 @@ from .interfaces import FTDInterfaces
 from .routing import FTDRouting
 from .nat import FTDNatPolicy
 from .platform import FTDPlatform
+from .download import FTDDownload
 from typing import Optional
 
 # from .ftd_backups import FTDBackups
@@ -45,6 +46,7 @@ class FTDClient(
     FTDRouting,
     FTDNatPolicy,
     FTDPlatform,
+    FTDDownload,
     # FTDBackups,
     # FTDFlexConfig,
     # FTDHighAvailability,
