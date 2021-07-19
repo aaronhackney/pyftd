@@ -122,16 +122,18 @@ class FTDBaseClient(object):
         self.verify = verify
         self.http_session = Session()
         self.http_session.proxies = proxies
-        self.api_version = FTDBaseClient.get_api_version(self.base_url, proxies, verify, timeout)
+        self.timeout = timeout
+        self.api_version = FTDBaseClient.get_api_version(
+            ftd_ip, proxies=self.proxies, verify=self.verify, timeout=self.timeout, fdm_port=self.fdm_port
+        )
         self.username = username
         self.password = password
         self.token = None
-        self.timeout = timeout
         self.get_access_token()  # Get an auth token
         self.get_swagger_client()  # download the swagger spec
 
     @staticmethod
-    def get_api_version(ftd_base_url, proxies, verify=True, timeout=30) -> int:
+    def get_api_version(ftd_ip, proxies=None, verify=True, timeout=30, fdm_port=443) -> int:
         """
         This is callable without authentication and without instantiation the swagger client or this class to get the
         API version.
@@ -143,9 +145,11 @@ class FTDBaseClient(object):
         e.g. if /api/versions returns [v1,v2,v3,v4,v5,latest] then this method will return 5
         :return: int api version
         """
+        base_url = f"https://{ftd_ip}:{fdm_port}" if fdm_port else f"https://{ftd_ip}"
         http_session = Session()
-        http_session.proxies = proxies
-        api_response = http_session.get(url=f"{ftd_base_url}/api/versions", verify=verify, timeout=timeout)
+        if proxies:
+            http_session.proxies = proxies
+        api_response = http_session.get(url=f"{base_url}/api/versions", verify=verify, timeout=timeout)
         data = api_response.json()
         return int(data["supportedVersions"][len(data["supportedVersions"]) - 2][1:])
 
