@@ -113,7 +113,7 @@ class FTDBaseClient(object):
         timeout: int = 30,
     ):
         self.proxies = proxies
-        self.fdm_port = str(fdm_port)
+        self.fdm_port = str(fdm_port) if fdm_port else None
         self.base_url = f"https://{ftd_ip}:{self.fdm_port}" if fdm_port else f"https://{ftd_ip}"
         self.verify = verify  # allow API self-signed certs * DANGER *
         self.common_prefix = f"{self.base_url}/api/fdm/latest"

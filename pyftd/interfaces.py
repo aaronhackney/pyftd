@@ -142,6 +142,74 @@ class FTDInterfaces:
         ).result()
 
     ################################
+    # VLAN Interface Objects
+    @FTDAPIWrapper()
+    def get_vlan_interface_list(self, limit: int = 9999, offset: int = 0, filter: Optional[str] = None) -> list:
+        """
+        Get a list of vlan interfaces
+        :param limit: limit the number of records returned
+        :param offset: starting index of records to return (for paging)
+        :param filter: limit returned results based on filters like "name:foo" or "fts~bar"
+        :return: list of interface objects
+        :rtype: list
+        """
+        return (
+            self.swagger_client.Interface.getVlanInterfaceList(limit=limit, offset=offset, filter=filter).result().items
+        )
+
+    @FTDAPIWrapper()
+    def get_vlan_interface(self, vlan_interface_id: str) -> list:
+        """
+        Given a physical interface object ID, return the vlan interface object
+        """
+        return self.swagger_client.Interface.getVlanInterface(objId=vlan_interface_id).result()
+
+    @FTDAPIWrapper()
+    def update_vlan_interface(self, vlan_intf_obj: dict) -> dict:
+        return self.swagger_client.Interface.editVlanInterface(body=vlan_intf_obj, objId=vlan_intf_obj.id).result()
+
+    @FTDAPIWrapper()
+    def delete_vlan_interface(self, vlan_interface_id: str) -> list:
+        """
+        Given a physical interface object ID, delete the vlan interface object
+        """
+        return self.swagger_client.Interface.deleteVlanInterface(objId=vlan_interface_id).result()
+
+    @FTDAPIWrapper()
+    def create_vlan_interface(self, vlan_intf_obj: dict) -> dict:
+        """
+        Given a sub-interface configuration (dict), create the sub interface
+        :param parent_interface_id: str the physical interface on which to create the sub interface
+        :param vlan_intf_obj: dict {
+                                      "type": "vlaninterface",
+                                      "vlanId": 101,
+                                          "name": "test-segment",
+                                      "mode": "ROUTED",
+                                      "enabled": true,
+                                      "mtu": 1500,
+                                      "hardwareName": "VLAN101",
+                                      "description": "VLAN 101 Sub Interface",
+                                      "monitorInterface": true,
+                                          "managementInterface=False,
+                                                                          "managementOnly=False,
+                                      "ipv4": {
+                                        "ipType": "STATIC",
+                                        "dhcpRouteMetric": 1,
+                                        "defaultRouteUsingDHCP": true,
+                                        "type": "interfaceipv4",
+                                        "ipAddress": {
+                                          "standbyIpAddress": "",
+                                          "type": "haipv4address",
+                                          "netmask": "255.255.255.0",
+                                          "ipAddress": "10.10.10.100"
+                                        }
+                                      },
+                                 }
+        ** Note ** See Api Browser for a complete data model and possible settings
+        """
+        return self.swagger_client.Interface.addVlanInterface(body=vlan_intf_obj).result()
+
+    ################################
     # All Interface Objects (Read Only Calls!)
 
     @FTDAPIWrapper()

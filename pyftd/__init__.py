@@ -14,6 +14,7 @@ from .routing import FTDRouting
 from .nat import FTDNatPolicy
 from .platform import FTDPlatform
 from .download import FTDDownload
+from .dhcp import FTDDHCP
 from typing import Optional
 
 # from .ftd_backups import FTDBackups
@@ -47,6 +48,7 @@ class FTDClient(
     FTDNatPolicy,
     FTDPlatform,
     FTDDownload,
+    FTDDHCP,
     # FTDBackups,
     # FTDFlexConfig,
     # FTDHighAvailability,

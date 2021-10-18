@@ -13,7 +13,13 @@ class TestInterfafces(TestCase):
 
     def setUp(self):
         verify = True if environ.get("VERIFY") else False
-        self.ftd_client = FTDClient(environ.get("FTDIP"), environ.get("FTDUSER"), environ.get("FTDPASS"), verify=verify)
+        self.ftd_client = FTDClient(
+            environ.get("FTDIP"),
+            environ.get("FTDUSER"),
+            environ.get("FTDPASS"),
+            fdm_port=environ.get("FTDPORT"),
+            verify=verify,
+        )
 
     #############################
     # Physical Interface Objects
@@ -97,6 +103,53 @@ class TestInterfafces(TestCase):
 
         # Delete
         self.ftd_client.delete_sub_interface(phys_int_list[2].id, sub_int.id)
+
+    #############################
+    # VLAN Interface Objects
+    def test_crud_operations_vlan_interfaces(self):
+        # Create
+        vlan_intf = self.ftd_client.create_vlan_interface(
+            {
+                "type": "vlaninterface",
+                "vlanId": 101,
+                "name": "test-segment",
+                "mode": "ROUTED",
+                "enabled": True,
+                "mtu": 1500,
+                "hardwareName": "VLAN101",
+                "description": "VLAN 101 Interface",
+                "monitorInterface": True,
+                "managementInterface": False,
+                "managementOnly": False,
+                "ipv4": {
+                    "ipType": "STATIC",
+                    "dhcpRouteMetric": 1,
+                    "defaultRouteUsingDHCP": True,
+                    "type": "interfaceipv4",
+                    "ipAddress": {
+                        "standbyIpAddress": "",
+                        "type": "haipv4address",
+                        "netmask": "255.255.255.0",
+                        "ipAddress": "10.10.10.100",
+                    },
+                },
+            },
+        )
+        self.assertIsNotNone(vlan_intf)
+
+        # Read
+        vlan_intf_list = self.ftd_client.get_vlan_interface_list(filter=f"name:{vlan_intf.name}")
+        self.assertTrue(vlan_intf_list)
+        vlan_intf = self.ftd_client.get_vlan_interface(vlan_intf_list[0].id)
+        self.assertTrue(vlan_intf)
+
+        # Update
+        vlan_intf.name = "updated-test-segment"
+        new_vlan_intf = self.ftd_client.update_vlan_interface(vlan_intf)
+        self.assertEqual("updated-test-segment", new_vlan_intf.name)
+
+        # Delete
+        self.assertIsNone(self.ftd_client.delete_vlan_interface(vlan_intf.id))
 
     #############################
     # Interfaces Operational Status and Info
