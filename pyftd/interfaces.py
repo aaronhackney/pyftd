@@ -70,6 +70,7 @@ class FTDInterfaces:
         self, parent_interface_id: str, limit: int = 9999, offset: int = 0, filter: Optional[str] = None
     ) -> list:
         """Given a parentId (physical interface object id), get all sub-interface configurations
+        :parent_interface_id: the physical interface
         :param limit: limit the number of records returned
         :param offset: starting index of records to return (for paging)
         :param filter: limit returned results based on filters like "name:foo" or "fts~bar"
