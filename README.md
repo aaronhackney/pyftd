@@ -23,7 +23,7 @@ from pyftd import FTDClient
 
 ftd_client = FTDClient(192.168.100.100, admin, "Admin123", verify=False)
 
-net_obj = self.ftd_client.create_network_object(
+net_obj = ftd_client.create_network_object(
     {
         "name": "TEST-NET",  
         "value": "10.1.1.0/24",  
